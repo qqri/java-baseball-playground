@@ -1,26 +1,97 @@
 package study;
 
+import java.lang.reflect.Array;
 import java.util.HashSet;
+import java.util.Scanner;
 import java.util.Set;
+import java.util.ArrayList;
 
 public class BaseballGameSelf {
+    static int strikeN = 0 , ballN = 0;
+    static Scanner sc = new Scanner(System.in);
+
     public static void main(String[] args) {
+
         RandomNum randomNum = new RandomNum();
-        System.out.println(randomNum.makeRandomNumber());
+        randomNum.makeRandomNumber();
+
+        while( !play(randomNum) ) { }
+
+    }
+
+    static boolean play(RandomNum randomNum) {
+        ArrayList<String> inputList = new ArrayList<>();
+        System.out.print("숫자를 입력해 주세요 : ");
+        String input = sc.next();
+
+        for(char c : input.toCharArray()) {
+            inputList.add(c+"");
+        }
+        strikeN = strike(inputList , randomNum.ans);
+        ballN = ball(inputList , randomNum.ans, randomNum.set);
+        printResultString(strikeN , ballN);
+
+        if(strikeN == 3 && !again()) return true; //게임 종료
+        else if(strikeN == 3) { //게임 다시시작
+            randomNum.makeRandomNumber();
+            return false;
+        }
+        return false;
+    }
+    static int strike(ArrayList<String> inputList , ArrayList<String> ansList) {
+        int res = 0;
+
+        if(inputList.get(0).equals(ansList.get(0))) res++;
+        if(inputList.get(1).equals(ansList.get(1))) res++;
+        if(inputList.get(2).equals(ansList.get(2))) res++;
+
+        return res;
+    }
+
+    static int ball(ArrayList<String> inputList , ArrayList<String> ansList , Set<String> set) {
+        int res = 0;
+
+        if(!inputList.get(0).equals(ansList.get(0)) && set.contains(inputList.get(0))) res++;
+        if(!inputList.get(1).equals(ansList.get(1)) && set.contains(inputList.get(1))) res++;
+        if(!inputList.get(2).equals(ansList.get(2)) && set.contains(inputList.get(2))) res++;
+
+        return res;
+    }
+
+    static void printResultString(int strike, int ball) {
+        String res = "";
+
+        if(ball != 0) res += String.valueOf(ball) + "볼 ";
+        if(strike != 0 && strike != 3) res += String.valueOf(strike) + "스트라이크";
+        else if(strike == 3) res += "3개의 숫자를 모두 맞히셨습니다! 게임 종료";
+        if(ball == 0 && strike == 0) res += "낫싱";
+
+        System.out.println(res);
+    }
+
+    static boolean again() {
+        System.out.print("게임을 새로 시작하려면 1, 종료하려면 2를 입력하세요.");
+        String input = sc.next();
+        if(input.equals("1")) return true;
+        else if(input.equals("2")) return false;
+
+        return false;
     }
 }
 
 class RandomNum{
-    Set<Integer> set = new HashSet<>();
-    String answer = "";
+    Set<String> set = new HashSet<>();
+    ArrayList<String> ans = new ArrayList<>();
 
-    public String makeRandomNumber() {
+
+    public void makeRandomNumber() {
+        set.clear();
+        ans.clear();
         for(int i = 0 ; set.size() < 3 ; i++ ) {
-            set.add((int)(Math.random()*9) + 1);
+            set.add( String.valueOf((int)(Math.random()*9) + 1));
         }
-        for(int n : set) {
-            answer = answer + String.valueOf(n);
+        for(String n : set) {
+            ans.add(n);
         }
-        return answer;
     }
 }
