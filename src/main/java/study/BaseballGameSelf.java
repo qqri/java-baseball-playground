@@ -6,10 +6,10 @@ import java.util.Scanner;
 import java.util.Set;
 import java.util.ArrayList;
 
+import static study.UI.*;
+
 public class BaseballGameSelf {
     static int strikeN = 0 , ballN = 0;
-    static Scanner sc = new Scanner(System.in);
-
     public static void main(String[] args) {
 
         RandomNum randomNum = new RandomNum();
@@ -18,18 +18,16 @@ public class BaseballGameSelf {
         while( !play(randomNum) ) { }
 
     }
-
-    static boolean play(RandomNum randomNum) {
+    public static boolean play(RandomNum randomNum) {
         ArrayList<String> inputList = new ArrayList<>();
-        System.out.print("숫자를 입력해 주세요 : ");
-        String input = sc.next();
 
+        String input = InputView();
         for(char c : input.toCharArray()) {
             inputList.add(c+"");
         }
         strikeN = strike(inputList , randomNum.ans);
         ballN = ball(inputList , randomNum.ans, randomNum.set);
-        printResultString(strikeN , ballN);
+        ResultView(strikeN , ballN);
 
         if(strikeN == 3 && !again()) return true; //게임 종료
         else if(strikeN == 3) { //게임 다시시작
@@ -38,6 +36,7 @@ public class BaseballGameSelf {
         }
         return false;
     }
+
     static int strike(ArrayList<String> inputList , ArrayList<String> ansList) {
         int res = 0;
 
@@ -57,28 +56,15 @@ public class BaseballGameSelf {
 
         return res;
     }
-
-    static void printResultString(int strike, int ball) {
-        String res = "";
-
-        if(ball != 0) res += String.valueOf(ball) + "볼 ";
-        if(strike != 0 && strike != 3) res += String.valueOf(strike) + "스트라이크";
-        else if(strike == 3) res += "3개의 숫자를 모두 맞히셨습니다! 게임 종료";
-        if(ball == 0 && strike == 0) res += "낫싱";
-
-        System.out.println(res);
-    }
-
     static boolean again() {
-        System.out.print("게임을 새로 시작하려면 1, 종료하려면 2를 입력하세요.");
-        String input = sc.next();
+        String input = InputViewAgain();
         if(input.equals("1")) return true;
         else if(input.equals("2")) return false;
 
         return false;
     }
-}
 
+}
 class RandomNum{
     Set<String> set = new HashSet<>();
     ArrayList<String> ans = new ArrayList<>();
@@ -93,5 +79,28 @@ class RandomNum{
         for(String n : set) {
             ans.add(n);
         }
+    }
+}
+
+class UI {
+
+    static Scanner sc = new Scanner(System.in);
+    static String InputView() {
+        System.out.print("숫자를 입력해 주세요 : ");
+        return sc.next();
+    }
+    static String InputViewAgain() {
+        System.out.print("게임을 새로 시작하려면 1, 종료하려면 2를 입력하세요.");
+        return sc.next();
+    }
+    static void ResultView(int strike, int ball) {
+        String res = "";
+
+        if(ball != 0) res += String.valueOf(ball) + "볼 ";
+        if(strike != 0 && strike != 3) res += String.valueOf(strike) + "스트라이크";
+        else if(strike == 3) res += "3개의 숫자를 모두 맞히셨습니다! 게임 종료";
+        if(ball == 0 && strike == 0) res += "낫싱";
+
+        System.out.println(res);
     }
 }
