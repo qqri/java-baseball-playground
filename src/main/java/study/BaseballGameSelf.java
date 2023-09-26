@@ -1,5 +1,7 @@
 package study;
 
+import com.sun.xml.internal.ws.api.message.ExceptionHasMessage;
+
 import java.lang.reflect.Array;
 import java.util.HashSet;
 import java.util.Scanner;
@@ -10,7 +12,7 @@ import static study.UI.*;
 
 public class BaseballGameSelf {
     static int strikeN = 0 , ballN = 0;
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
 
         RandomNum randomNum = new RandomNum();
         randomNum.makeRandomNumber();
@@ -18,7 +20,7 @@ public class BaseballGameSelf {
         while( !play(randomNum) ) { }
 
     }
-    public static boolean play(RandomNum randomNum) {
+    public static boolean play(RandomNum randomNum) throws Exception {
         ArrayList<String> inputList = new ArrayList<>();
 
         String input = InputView();
@@ -85,9 +87,11 @@ class RandomNum{
 class UI {
 
     static Scanner sc = new Scanner(System.in);
-    static String InputView() {
+    static String InputView() throws Exception {
         System.out.print("숫자를 입력해 주세요 : ");
-        return sc.next();
+        String input = sc.next();
+        checkInputLength(input, 3);
+        return input;
     }
     static String InputViewAgain() {
         System.out.print("게임을 새로 시작하려면 1, 종료하려면 2를 입력하세요.");
@@ -102,5 +106,9 @@ class UI {
         if(ball == 0 && strike == 0) res += "낫싱";
 
         System.out.println(res);
+    }
+
+    static void checkInputLength(String input, int len) throws Exception{
+        if(input.length() != len) throw new Exception("자릿수가 맞지 않음.");
     }
 }
