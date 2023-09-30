@@ -32,7 +32,7 @@ class BaseballGameSelfTest {
 
         input = inputList.stream()
                         .map(String::valueOf)
-                                .collect(Collectors.toList(Collectors.joining()));
+                                .collect(Collectors.joining());
 
 
         assertThat(input).isEqualTo("123");
