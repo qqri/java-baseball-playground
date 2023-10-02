@@ -5,11 +5,28 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Balls {
-    public final List<Ball> balls;
+    private final List<Ball> balls;
 
     public Balls(List<Integer> answers){
         this.balls = makeBallList(answers);
     }
+
+    public PlayResult play(List<Integer> input) {
+        PlayResult playResult = new PlayResult();
+        List<Ball> inputBalls = makeBallList(input);
+        for(Ball inputBall : inputBalls) {
+            if( isMatchStrike(inputBall) ) playResult.strike();
+            if( isMatchBall(inputBall) ) playResult.ball();
+        }
+        /* 스트림으로 쓸 수 있으나 가독성에서 별 차이 없는듯
+        inputBalls.stream()
+                .forEach( i -> {
+                    if(this.isMatchStrike(i)) playResult.strike();
+                    if(this.isMatchBall(i)) playResult.ball();
+                });*/
+        return playResult;
+    }
+
     public BallStatus play(Ball input) {
         return balls.stream()
                 .map(answer -> answer.play(input))
@@ -31,11 +48,11 @@ public class Balls {
                 .map(i -> new Ball(list.indexOf(i)+1, i))
                 .collect(Collectors.toList());
     }
-    static boolean isMatchStrike(Ball com, Ball input) {
-        return com.play(input) == BallStatus.BALL_STRIKE;
+    public boolean isMatchStrike(Ball input) {
+        return this.play(input) == BallStatus.BALL_STRIKE;
     }
 
-    static boolean isMatchBall(Ball com , Ball input) {
-        return com.play(input) == BallStatus.BALL_BALL;
+    public boolean isMatchBall( Ball input) {
+        return this.play(input) == BallStatus.BALL_BALL;
     }
 }

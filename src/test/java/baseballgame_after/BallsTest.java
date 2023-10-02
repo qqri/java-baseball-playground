@@ -19,8 +19,11 @@ public class BallsTest {
     }
     @Test
     public void strikeNum() {
-        List<Integer> input = Arrays.asList(1,3,5);
-        //Result result = Balls.
+        List<Integer> input = Arrays.asList(1,9,8);
+        Balls computers = new Balls(computer);
+        PlayResult playResult = computers.play(input);
+        assertThat(playResult.reportStrike()).isEqualTo(1);
+        assertThat(playResult.reportBall()).isEqualTo(2);
     }
     @Test
     public void strike() {
